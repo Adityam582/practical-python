@@ -1,0 +1,44 @@
+# fileparse.py
+# Exercise 3.3
+import csv
+import sys
+def parse_csv(filelines, select = None, types= None, has_headers=True, delimiter = ',', silence_errors=None):
+    '''
+    Parse a CSV file into a list of records
+    '''
+    headers = []
+    if select and not has_headers:
+        raise RuntimeError("select argument requires column headers")
+    records = []
+    #if delimiter:
+    #    rows = csv.reader(filelines, delimiter = delimiter)
+    rows = csv.reader(filelines, delimiter = delimiter)
+    if has_headers:
+        headers = next(rows)
+    if select:
+        indices = [ headers.index(colname) for colname in select ]
+        headers = select
+    for row in enumerate(rows):
+        if not row:    # Skip rows with no data
+            continue
+        if select:
+            try: 
+                row = [ row[index] for index in indices]
+            except Exception as e:
+                print('Computer says no. Reason :', e)
+            except ValueError as f:
+                print("Computer denies. Reason:", f)
+        if types:
+            try:
+                row = [func(val) for func, val in zip(types, row) ]
+            except ValueError as g:
+                if not silence_errors:
+                    print("Problem in row", row, "for", g)
+            except Exception as h:
+                    print("Problem in row", row, "for", h)
+        if headers:
+            record = dict(zip(headers,row))
+        else:
+            record = tuple(row)
+        records.append(record)
+    return records

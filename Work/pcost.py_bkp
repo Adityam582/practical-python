@@ -1,0 +1,48 @@
+# pcost.py
+#
+# Exercise 1.27
+import sys
+import csv
+def portfolio_cost(filename):
+    with open(filename) as f:
+       # data = f.read()
+        #splitted = data.split()
+       # elem = splitted [1:]
+       # ll = []
+        total = 0
+        rows = csv.reader(f)
+        header = next(rows)
+       # for i in rows:
+        for rowno, row in enumerate(rows):
+            record = dict(zip(header, row))
+#            print(record)
+            try:
+                shares = int(record['shares'])
+                price = float(record['price'])
+                #shares = float(row[1])
+                #price = float(row[2])
+#                total += float(i.split(',')[1])*float(i.split(',')[2])
+                total += shares*price
+            except ValueError:
+                print("bad row number", rowno, "with content", row)
+        f.close()
+    return total
+#if len(sys.argv) ==2:
+#    filename = sys.argv[1]
+#else:
+#    filename = 'Data/portfolio.csv'
+#cost = portfolio_cost('Data/portfolio.csv')
+def main(argv):
+    if len(sys.argv) != 2:
+        raise SystemExit(f'Usage: {sys.argv[0]} ' 'portfile')
+    portfile = sys.argv[1]
+    #                        pricefile = sys.argv[2]
+     #portfolio_report(portfile, pricefile)
+    cost = portfolio_cost(portfile)
+    print("Total", cost)
+                                          # Parse command line args, environment, etc.
+if __name__ == '__main__':
+    import sys
+    main(sys.argv)
+#cost = portfolio_cost(filename)
+#print("Total", cost)
